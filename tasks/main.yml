@@ -51,6 +51,12 @@
     dest: ~/.autorestic.yml
     mode: "0600"
 
+- name: Ensure autorestic log path exists
+  ansible.builtin.file:
+    path: "{{ autorestic_log_path }}"
+    state: directory
+    mode: "0755"
+
 - name: Run autorestic info
   ansible.builtin.command:
     cmd: autorestic info
@@ -79,7 +85,7 @@
         minute: "*/5"
         job: |
           {% if autorestic_cron_verbose == true %}
-          autorestic -c ~/.autorestic.yml --ci cron -vvvvv > /tmp/autorestic.log 2>&1
+          OUTPUT=$({{autorestic_install_directory}}/autorestic cron --ci -vvvvv -c ~/.autorestic.yml 2>&1); [ "$OUTPUT" ] && echo "$OUTPUT" >> {{autorestic_log_path}}/autorestic_$(date +\%Y\%m\%d\%H\%M\%S).log
           {% else %}
-          autorestic -c ~/.autorestic.yml --ci cron > /tmp/autorestic.log 2>&1
+          OUTPUT=$({{autorestic_install_directory}}/autorestic cron --ci --lean -c ~/.autorestic.yml 2>&1); [ "$OUTPUT" ] && echo "$OUTPUT" >> {{autorestic_log_path}}/autorestic_$(date +\%Y\%m\%d\%H\%M\%S).log
           {% endif %}
