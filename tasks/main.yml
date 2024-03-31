@@ -85,7 +85,7 @@
         minute: "*/5"
         job: |
           {% if autorestic_cron_verbose == true %}
-          OUTPUT=$({{autorestic_install_directory}}/autorestic cron --ci -vvvvv -c ~/.autorestic.yml 2>&1); [ "$OUTPUT" ] && echo "$OUTPUT" >> {{autorestic_log_path}}/autorestic_$(date +\%Y\%m\%d\%H\%M\%S).log
+          OUTPUT=$({{autorestic_install_directory.path}}/autorestic cron --ci -vvvvv -c ~/.autorestic.yml 2>&1); [ "$OUTPUT" ] && echo "$OUTPUT" >> {{autorestic_log_path}}/autorestic_$(date +\%Y\%m\%d\%H\%M\%S).log
           {% else %}
-          OUTPUT=$({{autorestic_install_directory}}/autorestic cron --ci --lean -c ~/.autorestic.yml 2>&1); [ "$OUTPUT" ] && echo "$OUTPUT" >> {{autorestic_log_path}}/autorestic_$(date +\%Y\%m\%d\%H\%M\%S).log
+          OUTPUT=$({{autorestic_install_directory.path}}/autorestic cron --ci --lean -c ~/.autorestic.yml 2>&1); [ "$OUTPUT" ] && echo "$OUTPUT" >> {{autorestic_log_path}}/autorestic_$(date +\%Y\%m\%d\%H\%M\%S).log
           {% endif %}
